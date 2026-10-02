@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Log in — SuperStyleShop</title><link rel="stylesheet" th:href="@{/css/site.css}">
+</head>
+<body><div class="page-shell">
+    <div th:replace="~{fragments :: header}"></div>
+    <main class="auth-card">
+        <div th:replace="~{fragments :: messages}"></div>
+        <p class="eyebrow">WELCOME BACK</p><h1>Log in</h1><p class="auth-intro">Good to see you again.</p>
+        <div class="error" th:if="${param.error}">Email or password was incorrect. Please try again.</div>
+        <form class="form-stack" th:action="@{/login}" method="post">
+            <label>Email<input type="email" name="username" autocomplete="email" required></label>
+            <label>Password<input type="password" name="password" autocomplete="current-password" required></label>
+            <button class="button button-dark full-button" type="submit">Log in</button>
+        </form>
+        <a class="text-link continue-link" th:href="@{/forgot-password}">Forgot password?</a>
+        <p class="auth-switch">New to SuperStyleShop? <a th:href="@{/signup}">Create an account</a></p>
+    </main>
+    <div th:replace="~{fragments :: footer}"></div>
+</div></body>
+</html>

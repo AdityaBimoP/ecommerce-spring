@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin dashboard — SuperStyleShop</title><link rel="stylesheet" th:href="@{/css/site.css}">
+</head>
+<body><div class="page-shell">
+    <div th:replace="~{fragments :: header}"></div>
+    <main class="content-main admin-main">
+        <div th:replace="~{fragments :: messages}"></div>
+        <p class="eyebrow">STORE MANAGEMENT</p><h1 class="page-title">Admin dashboard</h1>
+        <a class="back-link" th:href="@{/account}">← Back to account</a>
+
+        <section class="settings-section">
+            <h2>Products and inventory</h2>
+            <div class="admin-table">
+                <article class="admin-row product-admin-row" th:each="product : ${products}">
+                    <div><strong th:text="${product.name}">Product</strong>
+                        <span class="muted" th:text="${product.category}">Category</span></div>
+                    <form class="admin-edit-form" th:action="@{/admin/products/{id}(id=${product.id})}" method="post">
+                        <label>Price
+                            <input type="number" name="price" min="0.01" step="0.01" required th:value="${product.price}">
+                        </label>
+                        <label>Stock
+                            <input type="number" name="stockQuantity" min="0" required th:value="${product.stockQuantity}">
+                        </label>
+                        <button class="button button-outline" type="submit">Save product</button>
+                    </form>
+                </article>
+            </div>
+        </section>
+
+        <section class="settings-section">
+            <h2>User accounts</h2>
+            <div class="admin-table">
+                <article class="admin-row user-admin-row" th:each="account : ${users}">
+                    <div><strong th:text="${account.email}">user@example.com</strong>
+                        <span class="muted" th:text="${account.fullName}">User name</span></div>
+                    <span class="muted" th:text="${account.admin} ? 'Administrator' : 'Customer'">Customer</span>
+                    <form th:unless="${account.admin}"
+                          th:action="@{/admin/users/{id}/delete(id=${account.id})}" method="post">
+                        <button class="button button-outline" type="submit">Delete user and orders</button>
+                    </form>
+                    <span class="muted" th:if="${account.admin}">Protected account</span>
+                </article>
+            </div>
+        </section>
+
+        <section class="settings-section">
+            <h2>Order history</h2>
+            <p class="muted">Editing historical order quantities or prices does not change current inventory.</p>
+            <p class="muted" th:if="${orders.isEmpty()}">No orders have been placed.</p>
+            <article class="order-card admin-order-card" th:each="order : ${orders}">
+                <header class="order-heading">
+                    <div><h3 th:text="|${order.user == null ? 'Deleted account' : order.user.email} — Order #${order.orderNumber}|">Order #1</h3>
+                        <p th:text="${order.createdAt}">Order date</p></div>
+                    <strong th:text="|$${#numbers.formatDecimal(order.totalAmount, 1, 'POINT', 2, 'POINT')}|">$0.00</strong>
+                </header>
+                <div class="admin-order-item" th:each="line : ${order.items}">
+                    <span><strong th:text="${line.product.name}">Product</strong>
+                        <small class="muted" th:text="${line.product.category}">Category</small></span>
+                    <form class="admin-edit-form order-edit-form"
+                          th:action="@{/admin/orders/{orderId}/items/{itemId}(orderId=${order.id},itemId=${line.id})}"
+                          method="post">
+                        <label>Quantity
+                            <input type="number" name="quantity" min="1" max="99" required th:value="${line.quantity}">
+                        </label>
+                        <label>Unit price
+                            <input type="number" name="unitPrice" min="0.01" step="0.01" required th:value="${line.unitPrice}">
+                        </label>
+                        <button class="button button-outline" type="submit">Save item</button>
+                    </form>
+                    <span th:text="|Line total: $${#numbers.formatDecimal(line.lineTotal, 1, 'POINT', 2, 'POINT')}|">$0.00</span>
+                </div>
+                <form class="history-actions" th:action="@{/admin/orders/{id}/delete(id=${order.id})}" method="post">
+                    <button class="button button-outline" type="submit">Delete order history</button>
+                </form>
+            </article>
+        </section>
+    </main>
+    <div th:replace="~{fragments :: footer}"></div>
+</div></body>
+</html>

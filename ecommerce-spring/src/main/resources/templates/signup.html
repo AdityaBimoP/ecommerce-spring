@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Create account — SuperStyleShop</title><link rel="stylesheet" th:href="@{/css/site.css}">
+</head>
+<body><div class="page-shell">
+    <div th:replace="~{fragments :: header}"></div>
+    <main class="auth-card">
+        <div th:replace="~{fragments :: messages}"></div>
+        <p class="eyebrow">JOIN THE LITTLE THINGS</p><h1>Create an account</h1>
+        <form class="form-stack" th:action="@{/signup}" th:object="${form}" method="post">
+            <label>Full name<input type="text" th:field="*{fullName}" autocomplete="name" required>
+                <small class="field-error" th:errors="*{fullName}"></small></label>
+            <label>Email<input type="email" th:field="*{email}" autocomplete="email" required>
+                <small class="field-error" th:errors="*{email}"></small></label>
+            <label>Password<input type="password" th:field="*{password}" autocomplete="new-password"
+                                  pattern="(?=.*[A-Za-z])(?=.*[0-9]).{8,72}" required>
+                <small class="field-hint">Use 8–72 characters with at least one letter and one number.</small>
+                <small class="field-error" th:errors="*{password}"></small></label>
+            <label>Confirm password<input type="password" th:field="*{confirmPassword}" autocomplete="new-password" required>
+                <small class="field-error" th:errors="*{confirmPassword}"></small></label>
+            <button class="button button-dark full-button" type="submit">Create account</button>
+        </form>
+        <p class="auth-switch">Already have an account? <a th:href="@{/login}">Log in</a></p>
+    </main>
+    <div th:replace="~{fragments :: footer}"></div>
+</div></body>
+</html>

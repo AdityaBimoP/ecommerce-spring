@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Your cart — SuperStyleShop</title><link rel="stylesheet" th:href="@{/css/site.css}">
+</head>
+<body><div class="page-shell">
+    <div th:replace="~{fragments :: header}"></div>
+    <main class="content-main narrow-main">
+        <div th:replace="~{fragments :: messages}"></div>
+        <p class="eyebrow">YOUR BAG</p><h1 class="page-title">Shopping cart</h1>
+        <div class="empty-state" th:if="${items.isEmpty()}">
+            <div class="empty-icon">♡</div><h3>Your cart is taking a little break</h3>
+            <p>Find something lovely to bring home.</p><a class="button button-dark" th:href="@{/}">Explore products</a>
+        </div>
+        <div class="cart-layout" th:unless="${items.isEmpty()}">
+            <section class="cart-items">
+                <article class="cart-row" th:each="item : ${items}">
+                    <img th:src="${item.product.imageUrl}" th:alt="${item.product.name}">
+                    <div class="cart-product-info">
+                        <a class="product-name" th:href="@{/products/{id}(id=${item.product.id})}" th:text="${item.product.name}">Name</a>
+                        <span class="muted" th:text="${item.product.category}">Category</span>
+                        <span class="price" th:text="|$${#numbers.formatDecimal(item.product.price, 1, 'POINT', 2, 'POINT')}|">$0.00</span>
+                    </div>
+                    <form class="quantity-form" th:action="@{/cart/update}" method="post">
+                        <input type="hidden" name="productId" th:value="${item.product.id}">
+                        <label class="sr-only" th:for="|quantity-${item.product.id}|">Quantity</label>
+                        <input th:id="|quantity-${item.product.id}|" type="number" name="quantity"
+                               min="1" max="99" th:value="${item.quantity}">
+                        <button class="text-link" type="submit">Update</button>
+                    </form>
+                    <strong class="line-total" th:text="|$${#numbers.formatDecimal(item.lineTotal, 1, 'POINT', 2, 'POINT')}|">$0.00</strong>
+                    <form th:action="@{/cart/remove}" method="post">
+                        <input type="hidden" name="productId" th:value="${item.product.id}">
+                        <button class="remove-button" type="submit" aria-label="Remove item">×</button>
+                    </form>
+                </article>
+            </section>
+            <aside class="summary-card">
+                <h2>Order summary</h2><div class="summary-line"><span>Subtotal</span>
+                    <strong th:text="|$${#numbers.formatDecimal(total, 1, 'POINT', 2, 'POINT')}|">$0.00</strong></div>
+                <div class="summary-line"><span>Shipping</span><span>Complimentary</span></div>
+                <div class="summary-total"><span>Total</span>
+                    <strong th:text="|$${#numbers.formatDecimal(total, 1, 'POINT', 2, 'POINT')}|">$0.00</strong></div>
+                <a class="button button-dark full-button" th:href="@{/checkout}">Continue to checkout</a>
+                <a class="text-link continue-link" th:href="@{/}">Continue shopping</a>
+            </aside>
+        </div>
+    </main>
+    <div th:replace="~{fragments :: footer}"></div>
+</div></body>
+</html>

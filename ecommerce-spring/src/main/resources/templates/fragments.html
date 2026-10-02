@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+<header th:fragment="header" class="site-header">
+    <a class="brand" th:href="@{/}" aria-label="Super Style Shop home">
+        <span class="brand-mark" aria-hidden="true">SS</span>
+        <span class="brand-name">Super Style Shop</span>
+    </a>
+    <form class="search-form" th:action="@{/}" method="get">
+        <input type="search" name="q" placeholder="Search products..." th:value="${search}">
+        <button class="button button-dark" type="submit" aria-label="Search">Search</button>
+    </form>
+    <nav class="main-nav" aria-label="Main navigation">
+        <a th:href="@{/cart}">Cart <span class="cart-count" th:text="${cartCount ?: 0}">0</span></a>
+        <a sec:authorize="isAuthenticated()" th:href="@{/account}">Account</a>
+        <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin}">Admin</a>
+        <a sec:authorize="isAnonymous()" th:href="@{/login}">Log in</a>
+        <a sec:authorize="isAnonymous()" th:href="@{/signup}">Sign up</a>
+        <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
+            <button class="link-button" type="submit">Log out</button>
+        </form>
+    </nav>
+</header>
+<div th:fragment="messages" class="messages">
+    <p class="notice" th:if="${notice}" th:text="${notice}"></p>
+    <p class="error" th:if="${error}" th:text="${error}"></p>
+</div>
+<footer th:fragment="footer" class="site-footer">
+    <span>SuperStyleShop</span><span>A small demo store. Payments are simulated.</span>
+</footer>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Your account — SuperStyleShop</title><link rel="stylesheet" th:href="@{/css/site.css}">
+</head>
+<body><div class="page-shell">
+    <div th:replace="~{fragments :: header}"></div>
+    <main class="auth-card account-card">
+        <div th:replace="~{fragments :: messages}"></div>
+        <p class="eyebrow">YOUR DETAILS</p><h1>Account</h1>
+        <form class="form-stack" th:action="@{/account}" method="post">
+            <label>Email<input type="email" th:value="${user.email}" disabled></label>
+            <label>Full name<input type="text" name="fullName" th:value="${user.fullName}" maxlength="120" required></label>
+            <label>Address<textarea name="address" rows="3" maxlength="1000"
+                                    th:required="${!user.admin}" th:text="${user.address}"></textarea></label>
+            <button class="button button-dark full-button" type="submit">Save profile</button>
+        </form>
+        <section class="settings-section"><h2>Settings</h2>
+            <p>Password reset requests are simulated; no email is sent.</p>
+            <a class="text-link" th:href="@{/forgot-password}">Reset password</a></section>
+        <section class="settings-section order-history">
+            <h2>Order history</h2>
+            <p>Total purchases:
+                <strong th:text="|$${#numbers.formatDecimal(totalPurchases, 1, 'POINT', 2, 'POINT')}|">$0.00</strong>
+            </p>
+            <form class="history-filters" th:action="@{/account}" method="get">
+                <label>Order number
+                    <input type="number" name="orderNumber" min="1" th:value="${orderNumberFilter}">
+                </label>
+                <label>Item name
+                    <input type="search" name="itemName" maxlength="120" th:value="${itemNameFilter}">
+                </label>
+                <label>Category
+                    <select name="category">
+                        <option value="">All categories</option>
+                        <option th:each="option : ${categories}" th:value="${option}" th:text="${option}"
+                                th:selected="${categoryFilter.equalsIgnoreCase(option)}">Category</option>
+                    </select>
+                </label>
+                <button class="button button-outline" type="submit">Filter orders</button>
+                <a class="text-link" th:href="@{/account}">Clear filters</a>
+            </form>
+            <p class="muted" th:if="${orders.isEmpty()}">No matching orders were found.</p>
+            <article class="order-card" th:each="entry : ${orders}">
+                <header class="order-heading">
+                    <div><h3 th:text="|Order #${entry.order.orderNumber}|">Order #1</h3>
+                        <p th:text="${entry.order.createdAt}">Order date</p></div>
+                    <strong th:text="|$${#numbers.formatDecimal(entry.order.totalAmount, 1, 'POINT', 2, 'POINT')}|">$0.00</strong>
+                </header>
+                <div class="history-item" th:each="line : ${entry.items}">
+                    <div><strong th:text="${line.product.name}">Product</strong>
+                        <span class="muted" th:text="${line.product.category}">Category</span></div>
+                    <span th:text="|Qty ${line.quantity}|">Qty 1</span>
+                    <span th:text="|$${#numbers.formatDecimal(line.lineTotal, 1, 'POINT', 2, 'POINT')}|">$0.00</span>
+                </div>
+                <form class="history-actions" th:action="@{/account/orders/{id}/delete(id=${entry.order.id})}" method="post">
+                    <button class="button button-outline" type="submit">Delete this order history</button>
+                </form>
+            </article>
+        </section>
+        <section class="settings-section" sec:authorize="hasRole('ADMIN')">
+            <h2>Store administration</h2>
+            <p>Manage products, stock, accounts, and order records.</p>
+            <a class="button button-dark" th:href="@{/admin}">Open admin dashboard</a>
+        </section>
+    </main>
+    <div th:replace="~{fragments :: footer}"></div>
+</div></body>
+</html>

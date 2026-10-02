@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SuperStyleShop — thoughtful finds</title>
+    <link rel="stylesheet" th:href="@{/css/site.css}">
+</head>
+<body>
+<div class="page-shell">
+    <div th:replace="~{fragments :: header}"></div>
+    <main>
+        <div th:replace="~{fragments :: messages}"></div>
+        <section class="hero">
+            <div class="hero-copy">
+                <p class="eyebrow">A LITTLE BETTER, EVERY DAY</p>
+                <h1>Good things for<br><em>everyday living.</em></h1>
+                <p>Explore useful finds across tech, wardrobe, and the bookshelf.</p>
+                <a class="button button-dark" href="#catalog">Browse the collection <span aria-hidden="true">↓</span></a>
+            </div>
+            <div class="hero-art" aria-hidden="true">
+                <div class="hero-orbit"></div><span class="hero-star">✳</span>
+                <div class="hero-product">SS<br><small>STYLE SHOP</small></div>
+                <span class="hero-caption">small joys,<br>well chosen</span>
+            </div>
+        </section>
+        <section id="catalog" class="catalog-section">
+            <div class="section-heading">
+                <div><p class="eyebrow">THE COLLECTION</p><h2>Find your next favorite</h2></div>
+                <span class="result-count" th:text="|${#lists.size(products)} items|">6 items</span>
+            </div>
+            <div class="category-list">
+                <a th:each="category : ${categories}"
+                   th:href="@{/(category=${category},q=${search})}"
+                   th:text="${category}"
+                   th:classappend="${selectedCategory.equalsIgnoreCase(category)} ? ' active' : ''"
+                   class="category-chip">All</a>
+            </div>
+            <div class="product-grid" th:if="${!products.isEmpty()}">
+                <article class="product-card" th:each="product : ${products}">
+                    <a class="product-image" th:href="@{/products/{id}(id=${product.id})}">
+                        <img th:src="${product.imageUrl}" th:alt="${product.name}" loading="lazy">
+                        <span class="image-label" th:text="${product.category}">Category</span>
+                    </a>
+                    <div class="product-meta">
+                        <div>
+                            <a class="product-name" th:href="@{/products/{id}(id=${product.id})}" th:text="${product.name}">Product</a>
+                            <p th:text="|${product.category} · ${product.stockQuantity} in stock|">Category · stock</p>
+                        </div>
+                        <span class="price" th:text="|$${#numbers.formatDecimal(product.price, 1, 'POINT', 2, 'POINT')}|">$99.99</span>
+                    </div>
+                    <form th:action="@{/cart/add}" method="post">
+                        <input type="hidden" name="productId" th:value="${product.id}">
+                        <button class="button button-outline add-button" type="submit"
+                                th:disabled="${product.stockQuantity == 0}"
+                                th:text="${product.stockQuantity == 0} ? 'Out of stock' : 'Add to cart +'">Add to cart +</button>
+                    </form>
+                </article>
+            </div>
+            <div class="empty-state" th:if="${products.isEmpty()}">
+                <div class="empty-icon">⌕</div><h3>No matches just yet</h3>
+                <p>Try a different search or browse another category.</p>
+                <a class="text-link" th:href="@{/}">Show all products</a>
+            </div>
+        </section>
+        <section class="note-banner">
+            <span class="note-icon">✦</span><p>Curated for the little things that make a day.</p>
+            <a th:href="@{/}">Explore the collection <span aria-hidden="true">→</span></a>
+        </section>
+    </main>
+    <div th:replace="~{fragments :: footer}"></div>
+</div>
+</body>
+</html>

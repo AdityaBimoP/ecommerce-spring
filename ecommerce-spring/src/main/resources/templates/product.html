@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="|${product.name} — SuperStyleShop|">Product — SuperStyleShop</title>
+    <link rel="stylesheet" th:href="@{/css/site.css}">
+</head>
+<body><div class="page-shell">
+    <div th:replace="~{fragments :: header}"></div>
+    <main class="content-main">
+        <div th:replace="~{fragments :: messages}"></div>
+        <a class="back-link" th:href="@{/}">← Back to the collection</a>
+        <article class="product-detail">
+            <div class="detail-image"><img th:src="${product.imageUrl}" th:alt="${product.name}"></div>
+            <div class="detail-copy">
+                <p class="eyebrow" th:text="${product.category}">Category</p>
+                <h1 th:text="${product.name}">Product name</h1>
+                <p class="detail-description" th:text="${product.description}">Product description</p>
+                <p class="detail-price" th:text="|$${#numbers.formatDecimal(product.price, 1, 'POINT', 2, 'POINT')}|">$99.99</p>
+                <p class="muted" th:text="|${product.stockQuantity} in stock|">99 in stock</p>
+                <form th:action="@{/cart/add}" method="post" class="detail-actions">
+                    <input type="hidden" name="productId" th:value="${product.id}">
+                    <button class="button button-dark" type="submit" th:disabled="${product.stockQuantity == 0}">Add to cart</button>
+                </form>
+                <form th:action="@{/checkout/buy-now}" method="post" class="detail-actions">
+                    <input type="hidden" name="productId" th:value="${product.id}">
+                    <button class="button button-outline" type="submit" th:disabled="${product.stockQuantity == 0}">Buy now</button>
+                    <a class="button button-outline" th:href="@{/cart}">View cart</a>
+                </form>
+                <p class="shipping-note">A thoughtful choice, ready for your everyday.</p>
+            </div>
+        </article>
+    </main>
+    <div th:replace="~{fragments :: footer}"></div>
+</div></body>
+</html>

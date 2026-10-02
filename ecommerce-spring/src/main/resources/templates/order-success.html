@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Order complete — SuperStyleShop</title><link rel="stylesheet" th:href="@{/css/site.css}">
+</head>
+<body><div class="page-shell">
+    <div th:replace="~{fragments :: header}"></div>
+    <main class="success-card">
+        <div class="success-mark">✓</div><p class="eyebrow">DEMO ORDER COMPLETE</p>
+        <h1>Thanks for stopping by.</h1>
+        <p>Your simulated order <strong th:text="|#${orderId}|">#1</strong> has been recorded.</p>
+        <p class="muted">No real payment was taken.</p>
+        <a class="button button-dark" th:href="@{/}">Back to shopping</a>
+    </main>
+    <div th:replace="~{fragments :: footer}"></div>
+</div></body>
+</html>
