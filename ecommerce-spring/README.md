@@ -1,4 +1,4 @@
-# Ecommerce App — Spring Boot
+# Ecommerce App - Spring Boot
 
 This is a standalone Java/Spring Boot implementation of the demo store described in the original [`ecommerce/README.md`](https://github.com/MasterAditya/shopping-website/blob/main/ecommerce/README.md). It uses Spring MVC and Thymeleaf for the UI and backend in one application, so there is no separate React development server.
 
