@@ -1,4 +1,4 @@
-# Ecommerce App — Spring Boot
+# Ecommerce App - Spring Boot
 
 This is a standalone Java/Spring Boot implementation of the demo store described in the original [`ecommerce/README.md`](https://github.com/MasterAditya/shopping-website/blob/main/ecommerce/README.md). It uses Spring MVC and Thymeleaf for the UI and backend in one application, so there is no separate React development server.
 
@@ -30,7 +30,7 @@ This is a standalone Java/Spring Boot implementation of the demo store described
 - Inventory defaults to 99 per product and is decremented transactionally at checkout. Admins can update product prices and stock, edit saved order quantities/prices, delete orders, and remove customer accounts. Deleting a customer also deletes their orders; admin accounts are protected.
 - The admin dashboard is available at `/admin` after logging in with an administrator account.
 - QR/card demo-payment choices; checkout creates a database order and clears the cart. No payment credentials are requested or processed.
-- A generic password-reset confirmation screen. No email is sent and no password is changed.
+- A generic password-reset confirmation screen. No email is sent, and no password is changed.
 
 
 ## Project layout
